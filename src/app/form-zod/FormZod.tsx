@@ -31,6 +31,7 @@ import { Separator } from "@/components/ui/separator";
 import { useDropzone } from "react-dropzone";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // name: string;
 // email: string;
@@ -114,7 +115,7 @@ export default function FormZod() {
       const gReCaptchaToken = await executeRecaptcha("enquiryFormSubmit");
 
       // Submit the form data to the server
-      const response = await fetch("/api/zod", {
+      const response = await fetch("/api/send", {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",
@@ -164,7 +165,7 @@ export default function FormZod() {
   return (
     <Card className="border-none bg-transparent shadow-none">
       <CardHeader>
-        <CardTitle>Apply to Todak</CardTitle>
+        <CardTitle>Apply here</CardTitle>
         <CardDescription>Get directly in touch with the team</CardDescription>
         <Separator />
       </CardHeader>
@@ -298,6 +299,9 @@ export default function FormZod() {
           </CardFooter>
         </form>
       </Form>
+      <Link href={"/"} className="underline">
+        home
+      </Link>
     </Card>
   );
 }

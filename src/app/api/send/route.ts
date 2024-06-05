@@ -1,3 +1,4 @@
+// zod
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 import fs from "fs";
@@ -35,7 +36,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "reCAPTCHA verification failed" });
   }
 
-  const capitalizedPosition = data.position
+  const capitalized = data.position
     .split(" ")
     .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
@@ -55,16 +56,30 @@ export async function POST(req: NextRequest) {
   htmlContent = replaceMergeTags(data, htmlContent);
   const plainTextContent = stripHTMLTags(htmlContent);
 
+  // ATTACHMENT
+  const attachment = data.document
+    ? data.document.map((doc: any, index: number) => {
+        const base64Content = doc.split(",")[1]; // Extract base64 content
+        return {
+          content: base64Content,
+          filename: `file-${Date.now()}-${index}.pdf`,
+          contentType: "application/pdf",
+          encoding: "base64",
+        };
+      })
+    : [];
+
   // SEND MAIL
   try {
     await transporter.sendMail({
       ...mailOptions,
-      subject: `Received Job Application - ${capitalizedPosition}`,
+      subject: `Received Job Application - ${capitalized}`,
       replyTo: data.email,
       // cc: ["amirahnasihah97@gmail.com", "amirah@todak.com"],
       bcc: `'Copy of Application <${data.email}>'`,
       text: plainTextContent,
       html: htmlContent,
+      attachments: attachment,
     });
 
     return NextResponse.json({ success: true, score: recaptchaResponse.score });
