@@ -68,8 +68,6 @@ export default function DropZone() {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     accept: {
       "application/pdf": [".pdf"],
-      "image/png": [".png"],
-      "image/jpg": [".jpg"],
     },
     multiple: false,
   });

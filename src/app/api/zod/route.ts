@@ -58,13 +58,13 @@ export async function POST(req: NextRequest) {
 
   // ATTACHMENT
   const attachment = data.document
-    ? data.document.map((doc: any) => {
+    ? data.document.map((doc: any, index: number) => {
         const base64Content = doc.split(",")[1]; // Extract base64 content
         return {
           content: base64Content,
-          filename: `file-${Date.now()}.pdf`,
+          filename: `file-${Date.now()}-${index}.pdf`,
           contentType: "application/pdf",
-          disposition: "attachment",
+          encoding: "base64",
         };
       })
     : [];
